@@ -1,3 +1,4 @@
+default rel
 section .data
     string1 db "One for ", 0
     string2 db ", one for me.", 0
@@ -36,7 +37,7 @@ _end:
     mov rax,rbx
     ret
 _you:
-    mov rdi, string3
+    lea rdi, [string3]
 two_fer:
     xor rdx,rdx
     xor rax,rax
@@ -54,7 +55,7 @@ two_fer:
     xor rsi,rsi
     xor rdi,rdi
 
-    mov rsi,string1
+    lea rsi,[string1]
     mov rdi, r9
     call _strcat
 
@@ -62,7 +63,7 @@ two_fer:
     mov rdi, r9
     call _strcat
 
-    mov rsi,string2
+    lea rsi,[string2]
     mov rdi, r9
     call _strcat
      
