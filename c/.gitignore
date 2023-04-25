@@ -2,5 +2,6 @@ bin/configlet
 bin/configlet.exe
 build/
 **/*.out
+tests.out
 **/*.o
 .DS_Store
