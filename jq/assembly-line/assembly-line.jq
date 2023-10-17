@@ -8,10 +8,11 @@
 # Task 1: calculate the production rate per hour
 def production_rate_per_hour:
   if . < 0 then 0
-  elif . < 5 then 221 * 100/100 * .
-  elif . < 9 then 221 * 90 / 100 * .
-  elif . == 9 then 221 * 80 / 100 * .
-  elif . == 10 then 221 * 77 / 100  * .
+  elif . < 5 then (221 * 100/100 * .)
+  elif . < 9 then (221 * 90 / 100 * .)
+  elif . == 9 then (221 * 80 / 100 * .)
+  elif . == 10 then (221 * 77 / 100  * .)
+  else 0
   end
 ;
 
