@@ -1,3 +1,4 @@
+
 BEGIN {
   FS=","
   allergens[0]="eggs"
@@ -15,27 +16,14 @@ BEGIN {
   item = $3
 
   len=length(allergens)
-  while(score > 2^len){
-    score = score - 2^len
-  }
 
   for (i=len-1; i>=0; i--) {
     val = 2^i
     if( val > score )
       continue
-    for (j=i; j>=0; j--) {
-      val = 2^j
-      if (total + val > score)
-        continue
-      total += val
-      list = allergens[j] "," list
-      if (total == score) {
-        found = 1
-        break
-      }
+    if(and(val, score) !=0) {
+      list = allergens[i] "," list
     }
-    if (found == 0)
-      list = ""
   }
 
   if (ops == "allergic_to") {
