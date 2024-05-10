@@ -5,10 +5,7 @@ function calc(param) {
     exit 1
   }
   power = num -1
-  command = "echo '2^" power "' | /usr/bin/bc"
-  command | getline result
-  close(command)
-  return result
+  return lshift(1, power)
 }
 {
   if ($0 == "total") {
