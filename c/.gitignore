@@ -2,6 +2,7 @@ bin/configlet
 bin/configlet.exe
 build/
 **/*.out
-tests.out
+tests.out*
+*.dSYM
 **/*.o
 .DS_Store
