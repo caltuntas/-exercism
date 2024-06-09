@@ -1,0 +1,24 @@
+#include "pangram.h"
+
+bool is_pangram(const char *sentence) 
+{
+  if (!sentence)
+    return false;
+  int i=0;
+  char letters[26] = {0};
+  memset(letters,'-',sizeof(letters));
+  while(*sentence)
+  {
+    unsigned char chr = *sentence;
+    // convert to lower case
+    chr |= 1 << 5;
+    if (chr >= 97 && chr <= 122 && letters[chr-97] == '-')
+    {
+      letters[chr-97] = chr;
+      i++;
+    }
+
+    sentence++;
+  }
+  return i == 26;
+}
