@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #ifndef NUCLEOTIDE_COUNT_H
 #define NUCLEOTIDE_COUNT_H
 
