@@ -5,18 +5,72 @@
     action \
   }
 
-static int check_count(int counts[], int times)
-{
+typedef struct {
+  int *counts;
+  int sum;
+  category_t category;
+} params;
+
+typedef int func(params p);
+
+static int check_count(int counts[], int times) {
   FOR_EACH_VALUES ( if (counts[i] == times) return 1; );
   return 0;
 }
 
-static int check_straight(int counts[], int val)
-{
+static int check_straight(int counts[], int val) {
   if (counts[val]) return 0;
   FOR_EACH_VALUES ( if (counts[i] > 1 ) return 0;);
   return 30;
 }
+
+static int number_of(params p) {
+  return p.counts[p.category]*(p.category+1);
+}
+
+static int choice(params p) {
+  return p.sum;
+}
+
+static int four_of(params p) {
+  FOR_EACH_VALUES ( if (p.counts[i] >= 4) return (i+1)*4;);
+  return 0;
+}
+
+static int little_straight(params p) {
+  return check_straight(p.counts,5);
+}
+
+static int big_straight(params p) {
+  return check_straight(p.counts,0);
+}
+
+static int full_house(params p) {
+  if (check_count(p.counts,2) && check_count(p.counts,3))
+    return p.sum;
+  return 0;
+}
+
+static int yacht(params p) {
+  FOR_EACH_VALUES ( if (p.counts[i] == 5 ) return 50;);
+  return 0;
+}
+
+func *functions[12] = { 
+  number_of,
+  number_of,
+  number_of,
+  number_of,
+  number_of,
+  number_of,
+  full_house,
+  four_of,
+  little_straight,
+  big_straight,
+  choice,
+  yacht
+};
+
 
 int score(dice_t dice, category_t category)
 {
@@ -29,29 +83,7 @@ int score(dice_t dice, category_t category)
     sum += face;
   }
 
-  if (category == YACHT)
-    FOR_EACH_VALUES ( if (counts[i] == 5 ) return 50;);
-
-  if (category >= ONES && category <= SIXES)
-    return counts[category]*(category+1);
-
-  if (category == FULL_HOUSE)
-  {
-    if (check_count(counts,2) && check_count(counts,3))
-      return sum;
-  }
-
-  if (category == FOUR_OF_A_KIND)
-    FOR_EACH_VALUES ( if (counts[i] >= 4) return (i+1)*4;);
-
-  if (category == LITTLE_STRAIGHT)
-    return check_straight(counts,5);
-
-  if (category == BIG_STRAIGHT)
-    return check_straight(counts,0);
-
-  if (category == CHOICE)
-    return sum;
-  return 0;
+  params p = { counts, sum, category };
+  return functions[category](p);
 }
 
