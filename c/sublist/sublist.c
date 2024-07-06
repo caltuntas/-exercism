@@ -1,56 +1,43 @@
 #include "sublist.h"
 
-comparison_result_t check_lists(int *list1, int *list2, size_t count1, size_t count2)
+static char* convert_to_str(int* list, size_t len)
 {
-  if (list1 == NULL && list2 == NULL)
-    return EQUAL;
-  if (list1 == NULL && list2 != NULL)
-    return SUBLIST;
-  if (list1 != NULL && list2 == NULL)
-    return SUPERLIST;
-
-  if(count1 == count2)
+  int digits =0;
+  for (size_t i=0; i<len; i++)
   {
-    for (size_t i=0; i<count1; i++)
-    {
-      if (list1[i] != list2[i])
-        return UNEQUAL;
-    }
-    return EQUAL;
+    int d = list[i];
+    if (d == 0)
+      digits++;
+    else
+      digits += (floor(log10(abs(d))) + 1);
+    digits++;
   }
-
-  comparison_result_t success_result = SUBLIST;
-
-  comparison_result_t res = UNEQUAL;
-  if (count2 < count1)
+  int n=0;
+  char* str = calloc(digits+1, sizeof *str);
+  for (size_t i=0; i<len; i++)
   {
-    int *tmplist = list1;
-    list1 = list2;
-    list2 = tmplist;
-
-    size_t tmpcount = count1;
-    count1 = count2;
-    count2 = tmpcount;
-    success_result = SUPERLIST;
+    n += sprintf(&str[n],"%d,",list[i]);
   }
-
-  for (size_t i=0; i<count2; i++)
-  {
-    if (list2[i] != list1[0])
-      continue;
-
-    res = success_result;
-    for (size_t j=1; j<count2 && j<count1; j++)
-    {
-      if (list1[j] != list2[i+j])
-      {
-        res = UNEQUAL;
-        break;
-      }
-    }
-    if ( res == success_result )
-      return success_result;
-  }
-  return res;
+  return str;
 }
 
+comparison_result_t check_lists(int *list1, int *list2, size_t count1, size_t count2)
+{
+  if (list1 == NULL && list2 == NULL) return EQUAL;
+  if (list1 == NULL) return SUBLIST;
+  if (list2 == NULL) return SUPERLIST;
+
+  char *str1 = convert_to_str(list1,count1);
+  char *str2 = convert_to_str(list2,count2);
+
+  comparison_result_t res = UNEQUAL;
+  if(count1 == count2)
+    res= strcmp(str1, str2) == 0 ? EQUAL: UNEQUAL;
+  else if (count2 < count1)
+    res = strstr(str1, str2) != NULL?SUPERLIST:UNEQUAL;
+  else 
+    res = strstr(str2, str1) != NULL?SUBLIST:UNEQUAL;
+  free(str1);
+  free(str2);
+  return res;
+}

@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef enum { EQUAL, UNEQUAL, SUBLIST, SUPERLIST } comparison_result_t;
 
