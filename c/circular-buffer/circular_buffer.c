@@ -2,7 +2,7 @@
 
 circular_buffer_t *new_circular_buffer(size_t capacity)
 {
-  circular_buffer_t *cb = malloc(sizeof(cb) + capacity * sizeof(int));
+  circular_buffer_t *cb = malloc(sizeof(circular_buffer_t) + capacity * sizeof(buffer_value_t));
   cb->size = 0;
   cb->oldest = 0;
   cb->newest = 0;
