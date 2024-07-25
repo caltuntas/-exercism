@@ -1,48 +1,24 @@
 #include "bob.h"
 #include <stdbool.h>
 #include <ctype.h>
-#include <stdint.h>
-
-static char *whatever = "Whatever.";
-static char *sure = "Sure.";
-static char *chill_out = "Whoa, chill out!";
-static char *calm_down = "Calm down, I know what I'm doing!";
-static char *fine = "Fine. Be that way!";
 
 char *hey_bob(char *greeting)
 {
-  bool contains_upper=false, contains_lower=false, contains_space=false, contains_digit=false, contains_punct=false;
-  bool ends_with_question = false;
+  bool contains_upper=false, contains_lower=false, only_space=true;
   char last_char = 0;
-  if (!*greeting)
-    return fine;
 
   for (; *greeting; greeting++) {
-    contains_upper |=isupper(*greeting);
-    contains_lower |=islower(*greeting);
-    contains_punct |=ispunct(*greeting);
-    contains_digit |=isdigit(*greeting);
-
-    if (isspace(*greeting))
-      contains_space = true;
-    else 
+    if (!isspace(*greeting)){
+      only_space = false;
+      contains_upper |=isupper(*greeting);
+      contains_lower |=islower(*greeting);
       last_char = *greeting;
+    } 
   }
 
-  if (last_char == '?')
-    ends_with_question = true;
-
-  if (contains_upper && !contains_lower && !ends_with_question)
-    return chill_out;
-
-  if (contains_upper && !contains_lower && ends_with_question)
-    return calm_down;
-
-  if (ends_with_question) 
-    return sure;
-
-  if (contains_space && !contains_upper && !contains_lower && !contains_digit && !contains_punct)
-    return fine;
-
-  return whatever;
+  if (contains_upper && !contains_lower && last_char !='?') return "Whoa, chill out!";
+  if (contains_upper && !contains_lower && last_char =='?') return "Calm down, I know what I'm doing!";
+  if (last_char == '?') return "Sure.";
+  if (only_space) return "Fine. Be that way!";
+  return "Whatever.";
 }
